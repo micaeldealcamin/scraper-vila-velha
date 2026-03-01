@@ -1,0 +1,22 @@
+name: Scraper Diário Node
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - run: npm install
+      - run: node scraper.js
+      - name: Commit e Push
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add feed_vila_velha_vv.xml
+          git commit -m "Update RSS" || echo "Sem mudanças"
+          git push
